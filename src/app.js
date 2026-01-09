@@ -28,7 +28,7 @@ app.use(
   cacheAllGet({
     defaultTtlMs: 30_000,
     privateTtlMs: 10_000,
-    exclude: [/^\/auth\b/, /^\/oauth\b/],
+    exclude: [/^\/auth\/(login|register|refresh)\b/, /^\/oauth\b/],
   })
 );
 

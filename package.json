@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/youen-v/tp4-oauth-cache#readme",
   "dependencies": {
+    "@clerk/backend": "^2.29.2",
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "bcrypt": "^6.0.0",

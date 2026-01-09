@@ -8,13 +8,11 @@ setupPassport();
 
 router.use(passport.initialize());
 
-// 1) démarre le flow Google
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// 2) callback Google
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -22,13 +20,7 @@ router.get(
     failureRedirect: "/oauth/fail",
   }),
   async (req, res) => {
-    // req.user vient de la strategy (user DB)
     const { accessToken } = issueTokensForUser(res, req.user);
-
-    // Option A: renvoyer JSON (si tu testes avec Postman/curl)
-    // return res.json({ accessToken });
-
-    // Option B: redirect vers le front avec token
     const redirectUrl = new URL(process.env.FRONT_URL);
     redirectUrl.pathname = "/oauth-success";
     redirectUrl.searchParams.set("token", accessToken);

@@ -28,7 +28,6 @@ export function setupPassport() {
               data: { email, provider, providerId, password: null },
             });
           } else {
-            // si user existant local, on peut lier providerId
             if (!user.providerId || user.provider !== provider) {
               user = await prisma.user.update({
                 where: { id: user.id },

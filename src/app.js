@@ -7,6 +7,8 @@ import dotenv from "dotenv";
 import authRoutes from "./auth/auth.routes.js";
 import oauthRoutes from "./oauth/oauth.routes.js";
 import { requireClerkAuth } from "./clerk/clerk.middleware.js";
+import { cacheAllGet } from "./cache/cacheGet.js";
+import { invalidateOnWrite } from "./cache/cacheInvalid.js";
 
 dotenv.config();
 
@@ -36,4 +38,19 @@ app.listen(port, () =>
 
 app.get("/clerk/me", requireClerkAuth, (req, res) => {
   res.json({ ok: true, clerkUserId: req.clerk.userId });
+});
+
+app.use(
+  cacheAllGet({
+    defaultTtlMs: 30_000,
+    privateTtlMs: 10_000,
+    exclude: [/^\/auth\b/, /^\/oauth\b/, /^\/clerk\b/],
+  })
+);
+
+app.use(invalidateOnWrite());
+
+app.get("/cache-test", async (req, res) => {
+  await new Promise((r) => setTimeout(r, 300));
+  res.json({ ok: true, now: Date.now() });
 });

@@ -32,11 +32,10 @@ export async function register(req, res) {
   const accessToken = signAccessToken(user);
   const refreshToken = signRefreshToken(user);
 
-  // Refresh token en cookie HttpOnly (recommandé)
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     sameSite: "lax",
-    secure: false, // true en HTTPS
+    secure: false,
     path: "/auth/refresh",
   });
 
@@ -92,7 +91,6 @@ export async function me(req, res) {
   return res.json({ id: user.id, email: user.email, provider: user.provider });
 }
 
-// Réutilisé par OAuth: donne un JWT à un user
 export function issueTokensForUser(res, user) {
   const accessToken = signAccessToken(user);
   const refreshToken = signRefreshToken(user);

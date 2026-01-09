@@ -10,7 +10,7 @@ model User {
   id         String   @id @default(cuid())
   email      String   @unique
   password   String?
-  provider   String   @default("local") // local|google|twitter|clerk
+  provider   String   @default("local")
   providerId String?  @unique
   createdAt  DateTime @default(now())
 }

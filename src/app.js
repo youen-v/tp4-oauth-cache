@@ -24,6 +24,16 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(
+  cacheAllGet({
+    defaultTtlMs: 30_000,
+    privateTtlMs: 10_000,
+    exclude: [/^\/auth\b/, /^\/oauth\b/],
+  })
+);
+
+app.use(invalidateOnWrite());
+
 app.get("/", (req, res) => res.json({ ok: true, message: "TP Auth Node API" }));
 
 app.use("/auth", authRoutes);
@@ -39,16 +49,6 @@ app.listen(port, () =>
 app.get("/clerk/me", requireClerkAuth, (req, res) => {
   res.json({ ok: true, clerkUserId: req.clerk.userId });
 });
-
-app.use(
-  cacheAllGet({
-    defaultTtlMs: 30_000,
-    privateTtlMs: 10_000,
-    exclude: [/^\/auth\b/, /^\/oauth\b/, /^\/clerk\b/],
-  })
-);
-
-app.use(invalidateOnWrite());
 
 app.get("/cache-test", async (req, res) => {
   await new Promise((r) => setTimeout(r, 300));
